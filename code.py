@@ -24,8 +24,8 @@ def set_colors(labels, colors=colors_options):
     return colored_labels
 
 
-DataFrame = pd.read_csv('Project2_dataset.csv', header=None)
-DataMatrix = DataFrame.as_matrix()
+DataFrame = pd.read_csv('testdata177.csv', header=None)
+DataMatrix = DataFrame.values
 
 normalized_data_matrix = skp.scale(DataMatrix, axis=0)
 
