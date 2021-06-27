@@ -1,0 +1,124 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+```{r}
+DBDData <- read.csv(file = "dataset.csv", sep = ";")
+head(DBDData)
+```
+```{r}
+library(dplyr)
+identifier = select(DBDData, Kecamatan , Kelurahan , Kode.Kel, Kelas_Endemis)
+head(identifier)
+```
+```{r}
+DBDData <- DBDData[-c(1,2,3,4,24)]
+head(DBDData)
+```
+```{r}
+DBDData <- DBDData[-c(70,69)]
+head(DBDData)
+```
+```{r}
+DBDData[is.na(DBDData)] <- 0
+```
+
+ 
+```{r}
+library(ppclust)
+res.fcm <- fcm(DBDData, centers=7)
+as.data.frame(res.fcm$u)[1:6,]
+```
+```{r}
+res.fcm$v0
+```
+
+```{r}
+res.fcm$v
+```
+
+```{r}
+summary(res.fcm)
+```
+
+```{r}
+sink("summary.txt")
+print(summary(res.fcm))
+sink()  # returns output to the console
+```
+
+```{r}
+require(ppclust)
+require(cluster)
+require(fclust)
+require(factoextra)
+```
+
+```{r}
+summary(DBDData)
+```
+```{r}
+DBDData <- DBDData[-c(7,9,11,13)]
+```
+```{r}
+DBDData <- DBDData[-c(37)]
+```
+
+```{r}
+res.fcm2 <- ppclust2(res.fcm, "kmeans")
+fviz_cluster(res.fcm2, data = DBDData, 
+  ellipse.type = "convex",
+  palette = "jco",
+  repel = TRUE)
+```
+
+
+```{r}
+res.fcm3 <- ppclust2(res.fcm, "fanny")
+
+cluster::clusplot(scale(DBDData), res.fcm3$cluster,  
+  main = "Cluster plot of Iris data set",
+  color=TRUE, lines = 2, cex=1)
+```
+
+
+```{r}
+res.fcm4 <- ppclust2(res.fcm, "fclust")
+
+# Fuzzy Silhouette Index:
+idxsf <- SIL.F(res.fcm4$Xca, res.fcm4$U, alpha=1)
+paste("Fuzzy Silhouette Index: ",idxsf)
+```
+
+```{r}
+# Partition Entropy:
+idxsf <- PE(res.fcm4$U)
+paste("Partition Entropy: ",idxsf)
+```
+```{r}
+# Partition Coefficient:
+idxpc <- PC(res.fcm4$U)
+paste("Partition Coefficient : ",idxpc)
+```
+
+```{r}
+idxmpc <- MPC(res.fcm4$U)
+paste("Modified Partition Coefficient :",idxmpc)
+```
+
+

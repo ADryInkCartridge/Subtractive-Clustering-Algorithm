@@ -1,0 +1,9 @@
+Definisi data dan korelasi MEDIS dari attribut ke kelas
+
+Coba pake reliefF
+
+Lama gejala dalam hipotesa, punya korelasi dengan igg dan igm tetapi di data tidak ada korelasi
+
+Kenapa lama penegakan didrop ? sedangkan punya korelasi dengan ht_awal dan hb
+
+Alasan bapak mendrop setiap fitur yang didrop!
