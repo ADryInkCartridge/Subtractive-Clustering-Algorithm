@@ -83,3 +83,44 @@ for clusters in range (2):
         acceped[-1][0] += x
         acceped[-1][1] += y
 print(acceped)
+
+clust = pd.DataFrame(acceped,columns=['x','y','d','dc','dbefore','deltaD'])
+print(clust.head())
+clust['x'] *= xmax1
+clust['y'] *= xmax2
+
+sigma1 = r * xmax1 / math.sqrt(8)
+sigma2 = r * xmax2 / math.sqrt(8)
+
+df = pd.read_csv('Data Science/testdata177n2.csv', header=None)
+df['a'] = df[0]
+df['b'] = df[1]
+df = df.drop([0,1],axis=1)
+df['sigma1'] = sigma1
+df['sigma2'] = sigma2
+
+for index, row in clust.iterrows():
+    locx = 'x' + str(index)
+    locy = 'y' + str(index)
+    df[locx] = row['x']
+    df[locy] = row['y']
+print(df.head())
+
+for index in range (3):
+    locx = 'x' + str(index)
+    locy = 'y' + str(index)
+    miu = 'miu' + str(index)
+    df[miu] = np.exp((df['a']-df[locx])/(math.sqrt(2)*df['sigma1']) ** 2 + (df['b']-df[locy])/(math.sqrt(2)*df['sigma2'])**2)
+df['max'] = df[['miu0','miu1','miu2']].max(axis=1)
+print(df.head())
+
+for index, row in df.iterrows():
+    if (row['max']==row['miu0']):
+         df.at[index,'cluster']= 0
+    elif (row['max']==row['miu1']):
+        df.at[index,'cluster']= 1
+    else:
+        df.at[index,'cluster']= 2
+print(df.head())
+df.to_csv('pleaseWork.csv',sep=';',decimal=",")
+df.to_excel('pleaseWork.excel')
