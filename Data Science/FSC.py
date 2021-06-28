@@ -74,7 +74,12 @@ for clusters in range (2):
             arr2[index2][5] = arr2[index2][3] - arr2[index2][4]
             i4vals2[index2] = arr2[index2][5]
     maximum = max(i4vals2)
-    acceped.append(arr2[i4vals2.index(maximum)])
-    acceped[-1][0] += x
-    acceped[-1][1] += y
+    if(clusters == 0 and maximum/acceped[-1][3] > accept_ratio):
+        acceped.append(arr2[i4vals2.index(maximum)])
+        acceped[-1][0] += x
+        acceped[-1][1] += y
+    elif (maximum/acceped[-1][5] > accept_ratio):
+        acceped.append(arr2[i4vals2.index(maximum)])
+        acceped[-1][0] += x
+        acceped[-1][1] += y
 print(acceped)
