@@ -123,4 +123,3 @@ for index, row in df.iterrows():
         df.at[index,'cluster']= 2
 print(df.head())
 df.to_csv('pleaseWork.csv',sep=';',decimal=",")
-df.to_excel('pleaseWork.excel')

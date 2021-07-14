@@ -18,30 +18,17 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
-DBDData <- read.csv(file = "dataset.csv", sep = ";")
+DBDData <- read.csv(file = "noPCA.csv", sep = ",")
 head(DBDData)
 ```
-```{r}
-library(dplyr)
-identifier = select(DBDData, Kecamatan , Kelurahan , Kode.Kel, Kelas_Endemis)
-head(identifier)
-```
-```{r}
-DBDData <- DBDData[-c(1,2,3,4,24)]
-head(DBDData)
-```
-```{r}
-DBDData <- DBDData[-c(70,69)]
-head(DBDData)
-```
+
 ```{r}
 DBDData[is.na(DBDData)] <- 0
 ```
-
  
 ```{r}
 library(ppclust)
-res.fcm <- fcm(DBDData, centers=7)
+res.fcm <- fcm(DBDData, centers=4)
 as.data.frame(res.fcm$u)[1:6,]
 ```
 ```{r}
@@ -73,18 +60,7 @@ require(factoextra)
 summary(DBDData)
 ```
 ```{r}
-DBDData <- DBDData[-c(7,9,11,13)]
-```
-```{r}
-DBDData <- DBDData[-c(37)]
-```
-
-```{r}
-res.fcm2 <- ppclust2(res.fcm, "kmeans")
-fviz_cluster(res.fcm2, data = DBDData, 
-  ellipse.type = "convex",
-  palette = "jco",
-  repel = TRUE)
+DBDData <- DBDData[-c(7)]
 ```
 
 
