@@ -74,22 +74,24 @@ def potensi():
 
 
 def iterPotensi():
+    M = max(potensiAkhir)
     while(1):
-        Name = input("Please enter your name?")
+        # Name = input("Please enter your name?")
         potensiAwal = potensiAkhir.copy()
         idx = potensiAkhir.index(max(potensiAkhir))
         TData = dataCSV.loc[idx]
-        print(clusters[-1])
-        for j in range(nums):
-            rowData = dataCSV.loc[j]
-            s = 0
-            for k in range(cols):
-                s += ((clusters[-1][k] - rowData[k]) /
-                      (r * squash_factor)) ** 2
-            potensiAkhir[j] = M * math.exp(-4 * s)
-            potensiAkhir[j] = potensiAwal[j] - potensiAkhir[j]
-            if (potensiAkhir[j] < 0):
-                potensiAkhir[j] = 0
+        if(len(clusters) > 0):
+            print(next)
+            for j in range(nums):
+                rowData = dataCSV.loc[j]
+                s = 0
+                for k in range(cols):
+                    s += ((next[k] - rowData[k]) /
+                          (r * squash_factor)) ** 2
+                potensiAkhir[j] = M * math.exp(-4 * s)
+                potensiAkhir[j] = potensiAwal[j] - potensiAkhir[j]
+                if (potensiAkhir[j] < 0):
+                    potensiAkhir[j] = 0
         Z = max(potensiAkhir)
         print(potensiAkhir)
         if (Z/M > accept_ratio):
@@ -113,7 +115,7 @@ def iterPotensi():
 
         elif(max(potensiAkhir) == 0):
             break
-
+        next = TData.copy()
         potensiAkhir[idx] = 0
     return
 
@@ -121,14 +123,9 @@ def iterPotensi():
 # normalize()
 potensiAwal = potensi()
 potensiAkhir = potensiAwal.copy()
-idx = potensiAkhir.index(max(potensiAkhir))
-TData = dataCSV.loc[idx]
-print(f"Index : {idx} accepted")
-M = max(potensiAkhir)
-clusters.append(TData)
 # print(potensiAwal)
 iterPotensi()
-print(clusters)
+print(len(clusters))
 
 
 # print(miu)
