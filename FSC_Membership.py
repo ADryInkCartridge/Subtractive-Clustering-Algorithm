@@ -1,6 +1,8 @@
+from sklearn import datasets
 import pandas as pd
 from sklearn.manifold import TSNE
 import math
+import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -12,7 +14,7 @@ cluster = 4
 
 
 # FSC
-r = 1.7
+r = 0.786
 accept_ratio = 0.5
 reject_ratio = 0.15
 squash_factor = 1.25
@@ -23,8 +25,12 @@ clusters = []
 # sigmadf = pd.read_csv('S.csv', header=None)
 # sigma = sigmadf.iloc[0].values
 # df = pd.read_csv('noPCA.csv')
-dataCSV = pd.read_csv('noScale.csv')
-
+# iris = datasets.load_iris()
+# dataCSV = pd.DataFrame(data=np.c_[
+#                        iris['data'], iris['target']], columns=iris['feature_names'] + ['target'])
+# dataCSV = dataCSV.drop(['target'], axis=1)
+dataCSV = pd.read_csv('Drigo copy.csv', delimiter=';')
+dataCSV = dataCSV.drop(['member'], axis=1)
 nums, cols = dataCSV.shape
 print(nums)
 print(cols)
@@ -59,7 +65,7 @@ def membershipFunction():
             check2.append(x)
         if(row.index(max(row)) + 1 == 3):
             check3.append(x)
-        if(row.index(max(row)) + 1 == 3):
+        if(row.index(max(row)) + 1 == 4):
             check4.append(x)
 
 
@@ -70,6 +76,13 @@ def normalize():
         xmax = dataCSV[i].max() + 1
         dataCSV[i] = (dataCSV[i]-xmin)/(xmax-xmin)
         minmax.append([xmin, xmax])
+
+
+def normalizeFuzzy():
+    for i in (dataCSV.columns.values):
+        xmin = dataCSV[i].min()
+        xmax = dataCSV[i].max()
+        math.exp(-1 * ()/())
 
 
 def potensi():
@@ -180,6 +193,16 @@ def denormalize():
         x += 1
 
 
+def validityPCCE(miu):
+    pc = 0
+    ce = 0
+    for i in range(len(miu)):
+        for j in range(len(miu[0])):
+            pc += (miu[i][j] * miu[i][j])
+            ce += (miu[i][j] * math.log(miu[i][j]))
+    return(pc/nums, -1 * ce/nums)
+
+
 normalize()
 # print(len(clusters))
 potensiAwal = potensi()
@@ -202,13 +225,18 @@ X_embedded = TSNE(n_components=2, random_state=1).fit_transform(data)
 membershipFunction()
 
 miuDF = pd.DataFrame(miu)
-print(miuDF)
+(pc, ce) = validityPCCE(miu)
+
+print(f'Radius: {r}')
+print(f'Partition Coefficient: {pc}')
+print(f'Cluster Entropy: {ce}')
+# print(miuDF)
 # miuDF.to_csv('miu.csv', sep=';', decimal=',')
-print(dataCSV)
-print(check1)
-print(check2)
-print(check3)
-print(check4)
+# print(dataCSV)
+# print(check1)
+# print(check2)
+# print(check3)
+# print(check4)
 
 
 df = pd.DataFrame()
@@ -216,8 +244,8 @@ df['target'] = dataCSV['member']
 df['x'] = X_embedded[:, 0]
 df['y'] = X_embedded[:, 1]
 
-print(df.head())
-print(df.tail())
+# print(df.head())
+# print(df.tail())
 plt.figure(figsize=(16, 7))
 sns.scatterplot(x='x', y='y', hue='target', palette=sns.color_palette("hls", len(clusters)), data=df,
                 legend="full")

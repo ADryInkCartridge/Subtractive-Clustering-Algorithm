@@ -18,7 +18,9 @@ When you save the notebook, an HTML file containing the code and output will be 
 The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
 
 ```{r}
-DBDData <- read.csv(file = "noPCA.csv", sep = ",")
+
+DBDData <- read.csv(file = "EDAr3.csv", sep = ",")
+DBDData <- DBDData[, colSums(DBDData != 0) > 0]
 head(DBDData)
 ```
 
@@ -59,14 +61,10 @@ require(factoextra)
 ```{r}
 summary(DBDData)
 ```
-```{r}
-DBDData <- DBDData[-c(7)]
-```
 
 
 ```{r}
 res.fcm3 <- ppclust2(res.fcm, "fanny")
-
 cluster::clusplot(scale(DBDData), res.fcm3$cluster,  
   main = "Cluster plot of Iris data set",
   color=TRUE, lines = 2, cex=1)
@@ -75,7 +73,12 @@ cluster::clusplot(scale(DBDData), res.fcm3$cluster,
 
 ```{r}
 res.fcm4 <- ppclust2(res.fcm, "fclust")
+# Fuzzy Silhouette Index:
+idxsf <- SIL.F(res.fcm4$Xca, res.fcm4$U, alpha=1)
+paste("Fuzzy Silhouette Index: ",idxsf)
+```
 
+```{r}
 # Fuzzy Silhouette Index:
 idxsf <- SIL.F(res.fcm4$Xca, res.fcm4$U, alpha=1)
 paste("Fuzzy Silhouette Index: ",idxsf)
@@ -96,5 +99,14 @@ paste("Partition Coefficient : ",idxpc)
 idxmpc <- MPC(res.fcm4$U)
 paste("Modified Partition Coefficient :",idxmpc)
 ```
+```{r}
+library(fcvalid)
+idxxb = xb(res.fcm)
+paste("Xie and Beni Index :",idxxb)
+```
 
+```{r}
+idxfs <- fs(res.fcm)
+paste("Fukuyama Sugeno Index :",idxfs)
+```
 
